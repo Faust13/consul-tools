@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% set active_page = "switcher" %}
+{% block content %}
+<div class="container">
+<h1> Services maintance </h1>
+  <div class="row">
+    <div class="col-3 order-2" id="sticky-sidebar">
+      <div class="sticky-top">
+        <nav class="navbar flex-column align-items-stretch p-3" id="nav">
+          <div class="container-fluid">
+            <ul class="navbar-nav">
+            {% for service in service_list %}
+              <li class="nav-item">
+                <a class="nav-link" href="#{{ service.id }}">{{ service.service }}
+               {% set total_checks = namespace(value=0) %}
+               {% set green_checks = namespace(value=0) %}
+              {% for check in checks_list %}
+                {% if service.id == check.service_id %}
+                  {% set total_checks.value = total_checks.value + 1 %}
+                  {% if check.maintance == False %}
+                    {% set green_checks.value = green_checks.value + 1 %}
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+              {% if total_checks.value == green_checks.value %}
+                <span class="badge rounded-pill bg-success">
+              {% else %}
+                <span class="badge rounded-pill bg-danger">
+              {% endif %}
+                  {{ green_checks.value }}/{{ total_checks.value }} 
+                </span>
+                </a>
+              </li>
+            {% endfor %}
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </div>
+
+    <div data-bs-spy="scroll" class="col" data-bs-target="#nav" >
+    {% for service in service_list %}
+    <h3 id="{{ service.id }}">{{ service.service }}</h3>
+      <div class="col">
+        <table class="table table-striped text-center ">
+          <thead>
+            <tr>
+              <th scope="col">Service</th>
+              <th scope="col">DC</th>
+              <th scope="col">Maintance</th>
+              <th scope="col">Last time scraped</th>
+              <th scope="col">Last time updated</th>
+              <th scope="col">Last change by </th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+      {% for check in checks_list %}
+        {% if service.id == check.service_id %}
+            <tr>
+              <th scope="row">{{ service.service }}</th>
+          {% for dc in dc_list %}
+            {% if dc.id == check.dc_id %}
+              <td>{{ dc.name }}</td>
+            {% endif %}
+          {% endfor %}
+              <td>{{ check.maintance }}</td>
+              <td class="text-muted"><i>{{ check.last_scrape.strftime('%H:%M:%S') }}</i></td>  
+              <td class="text-muted"><i>{{ check.last_update.strftime('%H:%M:%S') }}</i></td>  
+              <td>{{ check.changed_by }}</td>
+              <td>
+                <form action="{{ url_for('switch_job') }}" method="post">
+          {% if check.maintance == False %}
+                  <button type="submit" class="btn btn-danger" value="{{ service.service }} {{ check.dc_id }}" name="switch_mt"> 
+                    Turn On
+                  </button>
+          {% else %}
+                  <button type="submit" class="btn btn-success" value="{{ service.service }} {{ check.dc_id }}" name="switch_mt">
+                    Turn Off
+                  </button>
+          {% endif %}
+                </form>
+              </td>
+            </tr>
+          {% endif %}
+      {% endfor %}
+          </tbody>
+        </table>
+    </div>
+    {% endfor %}
+    </div>
+  </div>
+</div> 
+{% endblock content %}
+

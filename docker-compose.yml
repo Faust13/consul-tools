@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+
+  app:
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile
+    restart: always
+    ports:
+      - '8089:5000'
+    environment:
+      DB_HOST: pgsql
+      DB_NAME: postgres
+      DB_USER: postgres
+      DB_PASS: '1111'
+      CONSUL_URL: 'consul.example.com'
+      CONSUL_PORT: 8301
+      OAUTH_APP_NAME: 'consul-switcher'
+      GITLAB_HOST: 'https://gitlab.com'
+      GITLAB_CLIENT_ID: 'secret'
+      GITLAB_CLIENT_SECRET: 'secret'
+    volumes:
+      - ./app:/app
+
+
+  pgsql:
+    image: postgres:14
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1111
+      - POSTGRES_DB=postgres
+      - TZ=Europe/Moscow
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./.pg_data:/var/lib/postgresql/data

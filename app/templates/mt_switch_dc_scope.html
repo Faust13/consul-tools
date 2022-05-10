@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% set active_page = "switcher" %}
+{% block content %}
+<h1> Services maintance </h1>
+
+  <div class="container py-4">
+    <table class="table text-center">
+      <thead>
+        <tr>
+          <th scope="col">DC</th>
+          <th scope="col">Service count</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+{% for entity in dc_list %}
+        <tr>
+          <th scope="row">{{ entity.name }}</th>
+          <td>
+            {% set total_checks = namespace(value=0) %}
+            {% set green_checks = namespace(value=0) %}
+            {% for check in checks_list %}
+              {% if check.dc_id == entity.id %}
+                {% set total_checks.value = total_checks.value + 1 %}
+                {% if check.maintance == False %}
+                  {% set green_checks.value = green_checks.value + 1 %}
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+            {% if total_checks.value == green_checks.value %}
+              <span class="badge rounded-pill bg-success">
+            {% else %}
+              <span class="badge rounded-pill bg-danger">
+            {% endif %}
+            {{ green_checks.value }}/{{ total_checks.value }} 
+              </span>
+          </td>
+          <td>
+            <form action="{{ url_for('switch_dc_job') }}" method="post">
+              <button type="submit" class="btn btn-primary" value="{{ entity.id }}" name="switch_dc_mt">
+                Switch Maintance
+              </button>
+            </form>
+          </td>
+        </tr>
+{% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock content %}
+

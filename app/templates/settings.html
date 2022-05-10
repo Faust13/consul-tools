@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% set active_page = "settings" %}
+{% block content %}
+<h1> Settings </h1>
+<br>
+<h2> Switcher </h2>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-9 border">
+      <h3> Services & tokens </h3>
+      <table class="table text-center table-striped ">
+        <thead>
+          <tr>
+            <th scope="col">Service</th>
+            <th scope="col">Token</th>
+            <th scope="col">Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for entity in service_list %}
+          <tr>
+            <th scope="row">{{ entity.service }}</th>
+            <td>{{ entity.token }}</td>
+            <td>
+              <form action="{{ url_for('del_service') }}" method="post">
+                <button type="submit" class="btn btn-danger" value="{{ entity.service }}" name="remove_acl">x</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#aclModal"> + Add</button>
+    </div>
+    <div class="col-md-3 border">
+    <h3> Datacenters </h3>
+      <table class="table text-center table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Datacenter</th>
+            <th scope="col">Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for entity in dc_list %}
+          <tr>
+            <th scope="row">{{ entity.name }}</th>
+            <td>
+              <form action="{{ url_for('del_dc') }}" method="post" >
+                <button type="submit" class="btn btn-danger" value="{{ entity.name }}" name="remove_dc">x</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#dcModal"> + Add</button>
+    </div>
+  </div>
+</div>
+
+{# Modal for Add new service and acl-key #}
+<div class="modal fade" id="aclModal" tabindex="-1" aria-labelledby="aclModalLabel" aria-hidden="true">
+  <form action="{{ url_for('add_service') }}" method="post" class="modal-dialog" name="add_acl_form">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="aclModalLabel">Add new acl-key</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="service_name" class="form-label">Service name</label>
+          <input type="text" class="form-control" id="service_name" name="service_name">
+          <div id="servicenameHelp" class="form-text">Do not forget to start name with "application" preffix</div>
+        </div>
+        <div class="mb-3">
+          <label for="acl_token" class="form-label">token</label>
+          <input type="text" class="form-control" id="acl_token" name="acl_token">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-success" name="add_acl">Add</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+{# Modal for Add new DC #}
+<div class="modal fade" id="dcModal" tabindex="-1" aria-labelledby="dcModalLabel" aria-hidden="true">
+  <form action="{{ url_for('add_datacenter') }}" method="post" class="modal-dialog" name='add_dc_form'>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="dcModalLabel">Add new Datacenter</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="dc_name" class="form-label">Datacenter name</label>
+          <input type="text" class="form-control" id="dc_name" name="dc_name">
+          <div id="dc_nameHelp" class="form-text">Max lenght 5 chars! </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-success" name="add_dc">Add</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock content %}

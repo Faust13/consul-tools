@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="">
+        <link href="{{ url_for('static', filename='/css/bootstrap.min.css')}}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='font/iconfont.css')}}" rel="stylesheet">
+        <script src="{{ url_for('static', filename='/js/bootstrap.bundle.min.js')}}" async=""></script>
+        <script src="https://kit.fontawesome.com/bb101ec5de.js" crossorigin="anonymous"></script>
+        <title>Consul Switcher</title>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='/img/favicon-32x32.png') }}">
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div style="height: 200px;" class="col-md-6 offset-md-3 text-center">
+                    <div class="card-header">
+                        <h5>Authentification requred</h5>
+                    </div>
+                    <div class="card-body ">
+                        <a href="{{ url_for('login') }}" class="btn btn-warning">
+                            <i class="fa fa-gitlab" aria-hidden="true"></i>
+                             Log in with Gitlab
+                        </a>
+                        <br>
+                        <br>
+                        <button class="btn btn-primary" disabled>
+                            <i class="fa-solid fa-network-wired"></i>
+                             Log in with LDAP
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

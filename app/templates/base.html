@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <link href="{{ url_for('static', filename='/css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='font/iconfont.css')}}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='/js/bootstrap.bundle.min.js')}}" async=""></script>
+
+    <title>Consul Switcher</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='/img/favicon-32x32.png') }}">
+  </head>
+  <body class="d-flex flex-column min-vh-100">
+    
+  <main>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #282C34;">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{{ url_for('index') }}"><img height="28" width='86' src="{{ url_for('static', filename='/img/logo.png')}}" /></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link {{ 'active' if active_page == 'index' else '' }}" aria-current="page" href="{{ url_for('index') }}">Main</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle {{ 'active' if active_page == 'switcher' else '' }}" id="switcher" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Switcher
+              </a>
+              <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="switcher">
+                <li><a class="dropdown-item"  href="{{ url_for('switcher_services') }}">Set maintance by service</a></li>
+                <li><a class="dropdown-item"  href="{{ url_for('switcher_dc') }}">Set maintance for whole DC </a></li>
+              </ul>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {{ 'active' if active_page == 'settings' else '' }}" href="{{ url_for('settings') }}">Settings</a>
+            </li>
+          </ul>
+          <form class="d-flex">
+            <div class="dropdown">
+              <a class="nav-link dropdown-toggle text-white" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="{{ user.avatar }}" width="48" height="48" class="rounded-circle img-fluid"/>
+                {{ user.name }}
+              </a>
+              <div class=" text-center dropdown-menu dropdown-menu-dark collapse"  aria-labelledby="navbarDropdown">
+                <div class="card-header">
+                  <h5>{{ user.name }}</h5>
+                  <img src="{{ user.avatar }}" width="128" height="128" class="rounded-circle img-fluid"/>
+                </div>
+                <div class="card-body ">
+                  <h5 class="card-title text-muted">@{{ user.username }}</h5>
+                  <p class="card-text"><a href = "mailto: {{ user.email }}">{{ user.email }}</a></p>
+                  <a href="{{ url_for('logout') }}" class="btn btn-primary">Log Out</a>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </nav>
+    <div class="container d-flex flex-column min-vh-100 ">
+    {% block content %}
+    {% endblock content%}
+    </div>
+      <footer class="pt-3 mt-4 text-muted border-top bg-dark text-white mt-auto text-center">
+        Consul tools by CloudTeam 
+        <br>
+        Powered by <a href="https://flask.palletsprojects.com/en/2.1.x/">Flask 2.1.2</a>
+        <br>
+        &copy; Vlad Bubnov, 2022
+        <br>
+          <a href="https://github.com/Faust13" class="text-white text-decoration-none" target="_blank" rel="me noopener">
+            <i class="iconfont icon-github"></i>
+          </a>
+      </footer>
+    </main>
+  </body>
+</html>
